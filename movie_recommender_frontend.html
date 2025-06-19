@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Recomendação - Algoritmo Genético</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .top-movies {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .control-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            height: fit-content;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .movie-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border-color: #667eea;
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .movie-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+            color: #333;
+            line-height: 1.3;
+            height: 2.6em;
+            overflow: hidden;
+        }
+
+        .movie-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .movie-year {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .movie-rating {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .movie-genres {
+            color: #888;
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+            height: 1.5em;
+            overflow: hidden;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn.secondary {
+            background: #6c757d;
+        }
+
+        .btn.secondary:hover:not(:disabled) {
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+        }
+
+        .recommendations-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            margin-top: 30px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .genre-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .genre-tag {
+            background: #e9ecef;
+            color: #495057;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .genre-tag:hover, .genre-tag.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .evolution-log {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .api-status {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .api-status.connected {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .api-status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .demo-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .comparison-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .comparison-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-section.best {
+            border-top: 4px solid #28a745;
+        }
+
+        .comparison-section.worst {
+            border-top: 4px solid #dc3545;
+        }
+
+        @media (max-width: 1024px) {
+            .main-dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-view {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 Sistema de Recomendação</h1>
+            <p>Demonstração: Algoritmo Genético aplicado a Filmes</p>
+        </div>
+
+        <div id="apiStatus" class="api-status disconnected">
+            🔴 Verificando conexão com a API...
+        </div>
+
+        <div class="main-dashboard">
+            <div class="top-movies">
+                <div class="section-title">
+                    🏆 Top 10 Filmes Mais Bem Avaliados
+                </div>
+                
+                <div class="stats-grid" id="movieStats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalMovies">-</div>
+                        <div class="stat-label">Total de Filmes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalUsers">-</div>
+                        <div class="stat-label">Usuários Ativos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="avgRating">-</div>
+                        <div class="stat-label">Avaliação Média</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalGenres">-</div>
+                        <div class="stat-label">Gêneros</div>
+                    </div>
+                </div>
+
+                <div class="genre-filter" id="genreFilter">
+                    <div class="genre-tag active" data-genre="all">Todos</div>
+                </div>
+
+                <div id="topMoviesGrid" class="movie-grid">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Carregando filmes...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-panel">
+                <div class="section-title">
+                    ⚙️ Painel de Controle
+                </div>
+
+                <div class="form-group">
+                    <label>URL da API:</label>
+                    <input type="text" id="apiUrl" value="http://127.0.0.1:8000">
+                </div>
+
+                <div class="demo-actions">
+                    <button class="btn" onclick="loadDemoData()">🎲 Carregar Demo</button>
+                    <button class="btn secondary" onclick="testAPI()">🔧 Testar API</button>
+                </div>
+
+                <div class="form-group">
+                    <label>👤 ID do Usuário:</label>
+                    <input type="number" id="userId" value="1" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label>📊 Quantidade de Recomendações:</label>
+                    <input type="number" id="recommendCount" value="8" min="5" max="20">
+                </div>
+
+                <div class="form-group">
+                    <label>🧬 Gerações do Algoritmo:</label>
+                    <input type="number" id="generations" value="15" min="5" max="50">
+                </div>
+
+                <button class="btn" onclick="generateRecommendations()" id="generateBtn">
+                    🚀 Gerar Recomendações
+                </button>
+
+                <button class="btn" onclick="showGenreComparison()">
+                    📈 Análise por Gênero
+                </button>
+            </div>
+        </div>
+
+        <div id="recommendationsSection" class="recommendations-section" style="display: none;">
+            <div class="section-title">
+                🎯 Recomendações Personalizadas
+            </div>
+            <div id="recommendationResults"></div>
+        </div>
+
+        <div id="comparisonSection" class="comparison-view" style="display: none;">
+            <div class="comparison-section best">
+                <div class="section-title">
+                    🥇 Melhores do Gênero
+                </div>
+                <div id="bestMovies" class="movie-grid"></div>
+            </div>
+            <div class="comparison-section worst">
+                <div class="section-title">
+                    📉 Piores do Gênero
+                </div>
+                <div id="worstMovies" class="movie-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentApiUrl = 'http://127.0.0.1:8000';
+        let allMovies = [];
+        let allUsers = [];
+        let movieRatings = {};
+        let genres = new Set();
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateApiUrl();
+            loadDemoData();
+        });
+
+        function updateApiUrl() {
+            currentApiUrl = document.getElementById('apiUrl').value.replace(/\/$/, '');
+            testAPI();
+        }
+
+        document.getElementById('apiUrl').addEventListener('change', updateApiUrl);
+
+        async function testAPI() {
+            const statusElement = document.getElementById('apiStatus');
+            try {
+                const response = await fetch(`${currentApiUrl}/api/movies`);
+                if (response.ok) {
+                    statusElement.className = 'api-status connected';
+                    statusElement.innerHTML = '🟢 Conectado à API com sucesso!';
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                statusElement.className = 'api-status disconnected';
+                statusElement.innerHTML = '🔴 Erro de conexão. Verifique se a API está rodando.';
+            }
+        }
+
+        async function apiRequest(endpoint, options = {}) {
+            const response = await fetch(`${currentApiUrl}${endpoint}`, {
+                headers: { 'Content-Type': 'application/json', ...options.headers },
+                ...options
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            return await response.json();
+        }
+
+        async function loadDemoData() {
+            try {
+                // Load movies and users in parallel
+                const [movies, users] = await Promise.all([
+                    apiRequest('/api/movies'),
+                    apiRequest('/api/users')
+                ]);
+                
+                allMovies = movies;
+                allUsers = users;
+                
+                // Calculate ratings for each movie
+                await calculateMovieRatings();
+                
+                // Extract genres
+                extractGenres();
+                
+                // Update UI
+                updateStats();
+                displayTopMovies();
+                createGenreFilter();
+                
+            } catch (error) {
+                console.error('Error loading demo data:', error);
+                showError('Erro ao carregar dados da demonstração');
+            }
+        }
+
+        async function calculateMovieRatings() {
+            const promises = allMovies.slice(0, 50).map(async (movie) => {
+                try {
+                    const ratings = await apiRequest(`/api/users_by_movie/${movie.movieId}`);
+                    if (ratings.length > 0) {
+                        const avgRating = ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length;
+                        movieRatings[movie.movieId] = {
+                            average: avgRating,
+                            count: ratings.length
+                        };
+                    }
+                } catch (error) {
+                    console.log(`No ratings found for movie ${movie.movieId}`);
+                }
+            });
+            
+            await Promise.all(promises);
+        }
+
+        function extractGenres() {
+            allMovies.forEach(movie => {
+                if (movie.genres) {
+                    movie.genres.split('|').forEach(genre => {
+                        genres.add(genre.trim());
+                    });
+                }
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('totalMovies').textContent = allMovies.length;
+            document.getElementById('totalUsers').textContent = allUsers.length;
+            
+            const ratings = Object.values(movieRatings);
+            const avgRating = ratings.length > 0 
+                ? (ratings.reduce((sum, r) => sum + r.average, 0) / ratings.length).toFixed(1)
+                : '0.0';
+            document.getElementById('avgRating').textContent = avgRating;
+            document.getElementById('totalGenres').textContent = genres.size;
+        }
+
+        function displayTopMovies(genreFilter = 'all') {
+            const container = document.getElementById('topMoviesGrid');
+            
+            // Filter movies by genre and sort by rating
+            let filteredMovies = allMovies.filter(movie => {
+                if (genreFilter === 'all') return true;
+                return movie.genres && movie.genres.includes(genreFilter);
+            });
+            
+            // Sort by rating (movies with ratings first)
+            filteredMovies.sort((a, b) => {
+                const ratingA = movieRatings[a.movieId]?.average || 0;
+                const ratingB = movieRatings[b.movieId]?.average || 0;
+                return ratingB - ratingA;
+            });
+            
+            const topMovies = filteredMovies.slice(0, 10);
+            
+            if (topMovies.length === 0) {
+                container.innerHTML = '<p>Nenhum filme encontrado para este gênero.</p>';
+                return;
+            }
+            
+            const moviesHtml = topMovies.map(movie => {
+                const rating = movieRatings[movie.movieId];
+                const ratingDisplay = rating 
+                    ? `⭐ ${rating.average.toFixed(1)}`
+                    : '⭐ N/A';
+                
+                return `
+                    <div class="movie-card">
+                        ${movie.url_poster ? `<img src="${movie.url_poster}" alt="${movie.title}" class="movie-poster" onerror="this.style.display='none'">` : ''}
+                        <div class="movie-title">${movie.title}</div>
+                        <div class="movie-info">
+                            <span class="movie-year">${movie.year || 'N/A'}</span>
+                            <span class="movie-rating">${ratingDisplay}</span>
+                        </div>
+                        <div class="movie-genres">${movie.genres || 'Sem gênero'}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = moviesHtml;
+        }
+
+        function createGenreFilter() {
+            const container = document.getElementById('genreFilter');
+            const sortedGenres = Array.from(genres).sort().slice(0, 8); // Show top 8 genres
+            
+            const genreHtml = sortedGenres.map(genre => 
+                `<div class="genre-tag" data-genre="${genre}" onclick="filterByGenre('${genre}')">${genre}</div>`
+            ).join('');
+            
+            container.innerHTML = `
+                <div class="genre-tag active" data-genre="all" onclick="filterByGenre('all')">Todos</div>
+                ${genreHtml}
+            `;
+        }
+
+        function filterByGenre(genre) {
+            // Update active genre
+            document.querySelectorAll('.genre-tag').forEach(tag => {
+                tag.classList.remove('active');
+            });
+            document.querySelector(`[data-genre="${genre}"]`).classList.add('active');
+            
+            // Filter movies
+            displayTopMovies(genre);
+        }
+
+        async function generateRecommendations() {
+            const userId = document.getElementById('userId').value;
+            const recommendCount = document.getElementById('recommendCount').value;
+            const generations = document.getElementById('generations').value;
+            
+            if (!userId) {
+                showError('Por favor, digite um ID de usuário válido');
+                return;
+            }
+            
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Gerando...';
+            
+            const section = document.getElementById('recommendationsSection');
+            section.style.display = 'block';
+            section.innerHTML = `
+                <div class="section-title">🎯 Recomendações Personalizadas</div>
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Algoritmo genético em execução... (${generations} gerações)</p>
+                </div>
+            `;
+            
+            try {
+                const config = {
+                    query_search: parseInt(userId),
+                    individual_size: parseInt(recommendCount),
+                    population_size: 50,
+                    p_crossover: 80,
+                    p_mutation: 20,
+                    max_generations: parseInt(generations),
+                    size_hall_of_fame: 1,
+                    seed: 42
+                };
+                
+                const result = await apiRequest('/api/recommender', {
+                    method: 'POST',
+                    body: JSON.stringify(config)
+                });
+                
+                displayRecommendations(result, userId);
+                
+            } catch (error) {
+                showError(`Erro ao gerar recomendações: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '🚀 Gerar Recomendações';
+            }
+        }
+
+        function displayRecommendations(result, userId) {
+            const section = document.getElementById('recommendationsSection');
+            
+            const moviesHtml = result.best.map(movie => {
+                const rating = movieRatings[movie.movieId];
+                const ratingDisplay = rating 
+                    ? `⭐ ${rating.average.toFixed(1)} (${rating.count} avaliações)`
+                    : '⭐ Sem avaliações';
+                
+                return `
+                    <div class="movie-card">
+                        ${movie.url_poster ? `<img src="${movie.url_poster}" alt="${movie.title}" class="movie-poster" onerror="this.style.display='none'">` : ''}
+                        <div class="movie-title">${movie.title}</div>
+                        <div class="movie-info">
+                            <span class="movie-year">${movie.year || 'N/A'}</span>
+                            <span class="movie-rating">${ratingDisplay}</span>
+                        </div>
+                        <div class="movie-genres">${movie.genres || 'Sem gênero'}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            const logText = result.logs.map(gen => 
+                `Geração ${gen.gen}: Fitness Máximo=${gen.max.toFixed(3)}, Média=${gen.avg.toFixed(3)}`
+            ).join('\n');
+            
+            section.innerHTML = `
+                <div class="section-title">🎯 Recomendações para o Usuário ${userId}</div>
+                <div class="success-message">
+                    ✅ Algoritmo genético executado com sucesso! ${result.logs.length} gerações processadas.
+                </div>
+                <div class="movie-grid">${moviesHtml}</div>
+                <div class="section-title" style="margin-top: 30px;">📊 Log de Evolução</div>
+                <div class="evolution-log">${logText}</div>
+            `;
+        }
+
+        async function showGenreComparison() {
+            const activeGenre = document.querySelector('.genre-tag.active').dataset.genre;
+            if (activeGenre === 'all') {
+                showError('Selecione um gênero específico para a análise comparativa');
+                return;
+            }
+            
+            const section = document.getElementById('comparisonSection');
+            section.style.display = 'block';
+            
+            // Filter movies by genre
+            const genreMovies = allMovies.filter(movie => 
+                movie.genres && movie.genres.includes(activeGenre)
+            );
+            
+            // Sort by rating
+            genreMovies.sort((a, b) => {
+                const ratingA = movieRatings[a.movieId]?.average || 0;
+                const ratingB = movieRatings[b.movieId]?.average || 0;
+                return ratingB - ratingA;
+            });
+            
+            const bestMovies = genreMovies.slice(0, 5);
+            const worstMovies = genreMovies.slice(-5).reverse();
+            
+            displayComparisonMovies(bestMovies, 'bestMovies');
+            displayComparisonMovies(worstMovies, 'worstMovies');
+        }
+
+        function displayComparisonMovies(movies, containerId) {
+            const container = document.getElementById(containerId);
+            
+            const moviesHtml = movies.map(movie => {
+                const rating = movieRatings[movie.movieId];
+                const ratingDisplay = rating 
+                    ? `⭐ ${rating.average.toFixed(1)}`
+                    : '⭐ N/A';
+                
+                return `
+                    <div class="movie-card">
+                        ${movie.url_poster ? `<img src="${movie.url_poster}" alt="${movie.title}" class="movie-poster" onerror="this.style.display='none'">` : ''}
+                        <div class="movie-title">${movie.title}</div>
+                        <div class="movie-info">
+                            <span class="movie-year">${movie.year || 'N/A'}</span>
+                            <span class="movie-rating">${ratingDisplay}</span>
+                        </div>
+                        <div class="movie-genres">${movie.genres || 'Sem gênero'}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = moviesHtml;
+        }
+
+        function showError(message) {
+            const section = document.getElementById('recommendationsSection');
+            section.style.display = 'block';
+            section.innerHTML = `
+                <div class="section-title">❌ Erro</div>
+                <div class="error-message">${message}</div>
+            `;
+        }
+    </script>
+</body>
+</html>
