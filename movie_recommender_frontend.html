@@ -18,6 +18,268 @@
             color: #333;
         }
 
+         .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 15px 15px 0 0;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .content {
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            min-height: 500px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group-2 {
+            margin-bottom: 20px;
+        }
+
+        .form-row-2 {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .form-row-2 label {
+            min-width: 150px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-row-2 input, .form-row-2 select {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-row-2 input:focus, .form-row-2 select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-2 {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn-2:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-2:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .movie-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .movie-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .movie-year {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .movie-genres {
+            color: #888;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        .movie-rating {
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .success {
+            color: #155724;
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .api-input {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .user-list, .movie-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+        }
+
+        .list-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .list-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .evolution-log {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -477,6 +739,62 @@
         </div>
     </div>
 
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('movies')">Filmes</button>
+            <button class="tab" onclick="showTab('users')">Usuários</button>
+            <button class="tab" onclick="showTab('ratings')">Avaliações</button>
+        </div>
+
+        <div class="content">
+            <!-- Movies Tab -->
+            <div id="movies" class="tab-content active">
+                <h2>Explorar Filmes</h2>
+                <div class="form-group-2">
+                    <button class="btn-2" onclick="loadAllMovies()">Carregar Todos os Filmes</button>
+                    <div class="form-row-2">
+                        <label>ID do Filme:</label>
+                        <input type="number" id="movieId" placeholder="Digite o ID do filme">
+                        <button class="btn-2" onclick="loadMovieById()">Buscar</button>
+                    </div>
+                </div>
+                <div id="moviesResults" class="results" style="display: none;"></div>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="users" class="tab-content">
+                <h2>Explorar Usuários</h2>
+                <div class="form-group-2">
+                    <button class="btn" onclick="loadAllUsers()">Carregar Todos os Usuários</button>
+                    <div class="form-row-2">
+                        <label>ID do Usuário:</label>
+                        <input type="number" id="userId" placeholder="Digite o ID do usuário">
+                        <button class="btn-2" onclick="loadUserById()">Buscar</button>
+                    </div>
+                </div>
+                <div id="usersResults" class="results" style="display: none;"></div>
+            </div>
+
+            <!-- Ratings Tab -->
+            <div id="ratings" class="tab-content">
+                <h2>Avaliações</h2>
+                <div class="form-group-2">
+                    <div class="form-row-2">
+                        <label>Filmes por Usuário:</label>
+                        <input type="number" id="userIdRatings" placeholder="ID do usuário">
+                        <button class="btn-2" onclick="loadMoviesByUser()">Buscar</button>
+                    </div>
+                    <div class="form-row-2">
+                        <label>Usuários por Filme:</label>
+                        <input type="number" id="movieIdRatings" placeholder="ID do filme">
+                        <button class="btn-2" onclick="loadUsersByMovie()">Buscar</button>
+                    </div>
+                </div>
+                <div id="ratingsResults" class="results" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
         let currentApiUrl = 'http://127.0.0.1:8000';
         let allMovies = [];
@@ -815,6 +1133,227 @@
                 <div class="error-message">${message}</div>
             `;
         }
+
+        // Update API URL
+        document.getElementById('apiUrl').addEventListener('change', function() {
+            currentApiUrl = this.value.replace(/\/$/, ''); // Remove trailing slash
+        });
+
+        // Tab functionality
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // API helper functions
+        async function apiRequest(endpoint, options = {}) {
+            try {
+                const response = await fetch(`${currentApiUrl}${endpoint}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        function showLoading(containerId) {
+            const container = document.getElementById(containerId);
+            container.style.display = 'block';
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Carregando...</p>
+                </div>
+            `;
+        }
+
+        function showError(containerId, message) {
+            const container = document.getElementById(containerId);
+            container.style.display = 'block';
+            container.innerHTML = `<div class="error">Erro: ${message}</div>`;
+        }
+
+        // Movies functions
+        async function loadAllMovies() {
+            showLoading('moviesResults');
+            try {
+                const movies = await apiRequest('/api/movies');
+                displayMovies(movies, 'moviesResults');
+            } catch (error) {
+                showError('moviesResults', error.message);
+            }
+        }
+
+        async function loadMovieById() {
+            const movieId = document.getElementById('movieId').value;
+            if (!movieId) {
+                showError('moviesResults', 'Por favor, digite um ID de filme');
+                return;
+            }
+
+            showLoading('moviesResults');
+            try {
+                const movie = await apiRequest(`/api/movies/${movieId}`);
+                displayMovies([movie], 'moviesResults');
+            } catch (error) {
+                showError('moviesResults', error.message);
+            }
+        }
+
+        function displayMovies(movies, containerId) {
+            const container = document.getElementById(containerId);
+            container.style.display = 'block';
+            
+            if (movies.length === 0) {
+                container.innerHTML = '<p>Nenhum filme encontrado.</p>';
+                return;
+            }
+
+            const moviesHtml = movies.map(movie => `
+                <div class="movie-card">
+                    ${movie.url_poster ? `<img src="${movie.url_poster}" alt="${movie.title}" class="movie-poster" onerror="this.style.display='none'">` : ''}
+                    <div class="movie-title">${movie.title}</div>
+                    <div class="movie-year">${movie.year || 'Ano não informado'}</div>
+                    <div class="movie-genres">${movie.genres || 'Gêneros não informados'}</div>
+                    <div style="margin-top: 10px;">
+                        <small style="color: #666;">ID: ${movie.movieId}</small>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <h3>Filmes Encontrados (${movies.length})</h3>
+                <div class="movie-grid">${moviesHtml}</div>
+            `;
+        }
+
+        // Users functions
+        async function loadAllUsers() {
+            showLoading('usersResults');
+            try {
+                const users = await apiRequest('/api/users');
+                displayUsers(users, 'usersResults');
+            } catch (error) {
+                showError('usersResults', error.message);
+            }
+        }
+
+        async function loadUserById() {
+            const userId = document.getElementById('userId').value;
+            if (!userId) {
+                showError('usersResults', 'Por favor, digite um ID de usuário');
+                return;
+            }
+
+            showLoading('usersResults');
+            try {
+                const user = await apiRequest(`/api/users/${userId}`);
+                displayUsers([user], 'usersResults');
+            } catch (error) {
+                showError('usersResults', error.message);
+            }
+        }
+
+        function displayUsers(users, containerId) {
+            const container = document.getElementById(containerId);
+            container.style.display = 'block';
+            
+            if (users.length === 0) {
+                container.innerHTML = '<p>Nenhum usuário encontrado.</p>';
+                return;
+            }
+
+            const usersHtml = users.map(user => `
+                <div class="list-item">
+                    <strong>${user.userName}</strong><br>
+                    <small>ID: ${user.userId}</small>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <h3>Usuários Encontrados (${users.length})</h3>
+                <div class="user-list">${usersHtml}</div>
+            `;
+        }
+
+        // Ratings functions
+        async function loadMoviesByUser() {
+            const userId = document.getElementById('userIdRatings').value;
+            if (!userId) {
+                showError('ratingsResults', 'Por favor, digite um ID de usuário');
+                return;
+            }
+
+            showLoading('ratingsResults');
+            try {
+                const ratings = await apiRequest(`/api/movies_by_user/${userId}`);
+                displayRatings(ratings, 'ratingsResults', 'filmes avaliados pelo usuário');
+            } catch (error) {
+                showError('ratingsResults', error.message);
+            }
+        }
+
+        async function loadUsersByMovie() {
+            const movieId = document.getElementById('movieIdRatings').value;
+            if (!movieId) {
+                showError('ratingsResults', 'Por favor, digite um ID de filme');
+                return;
+            }
+
+            showLoading('ratingsResults');
+            try {
+                const ratings = await apiRequest(`/api/users_by_movie/${movieId}`);
+                displayRatings(ratings, 'ratingsResults', 'usuários que avaliaram o filme');
+            } catch (error) {
+                showError('ratingsResults', error.message);
+            }
+        }
+
+        function displayRatings(ratings, containerId, title) {
+            const container = document.getElementById(containerId);
+            container.style.display = 'block';
+            
+            if (ratings.length === 0) {
+                container.innerHTML = '<p>Nenhuma avaliação encontrada.</p>';
+                return;
+            }
+
+            const ratingsHtml = ratings.map(rating => `
+                <div class="movie-card">
+                    <div class="movie-title">${rating.movie.title}</div>
+                    <div class="movie-year">${rating.movie.year || 'Ano não informado'}</div>
+                    <div class="movie-genres">${rating.movie.genres || 'Gêneros não informados'}</div>
+                    <div style="margin-top: 10px;">
+                        <div class="movie-rating">⭐ ${rating.rating}</div>
+                        <small style="color: #666;">Por: ${rating.user.userName}</small>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <h3>Resultado: ${ratings.length} ${title}</h3>
+                <div class="movie-grid">${ratingsHtml}</div>
+            `;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('GA Movie Recommender Frontend iniciado!');
+        });
     </script>
 </body>
 </html>
